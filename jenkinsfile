@@ -12,7 +12,7 @@ node {
     def CONNECTED_APP_CONSUMER_KEY_TWO=env.CONNECTED_APP_CONSUMER_KEY_DH_TWO
 
 
-   echo "${env.PATH}"
+   def toolbelt = tool 'toolbelt'
 
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
@@ -21,7 +21,7 @@ node {
 
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Auth Org') {
-        rc = command "sfdx auth:jwt:grant --instanceurl ${SFDC_HOST} --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG_DH} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --setalias HubOrg"
+        rc = command "${toolbelt} auth:jwt:grant --instanceurl ${SFDC_HOST} --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG_DH} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --setalias HubOrg"
                 if (rc != 0) {
                     error 'Salesforce dev hub org authorization failed.'
                 }
